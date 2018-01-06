@@ -6,8 +6,6 @@ import re
 import json
 import getopt
 import requests
-from html.parser import HTMLParser
-from html.entities import name2codepoint
 from amazonHtmlParser import *
 
     # https://www.amazon.com/dp/B0716SVLXH
@@ -29,11 +27,11 @@ def parserResponse(html):
     parser.feed(html)
     print("echo Feed end")
     startAttrs = parser.getStartAttrs()
-    import pdb; pdb.set_trace();
     for attr in startAttrs:
-        print (attr)
-        if attr == "span":
-            print ("123")
+        print (type(attr))
+        if "a-expander-content a-expander-partial-collapse-content" in attr:
+            print ("find the comment")
+            import pdb; pdb.set_trace();
 
 
 if __name__ == '__main__':
