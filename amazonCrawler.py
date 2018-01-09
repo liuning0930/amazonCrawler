@@ -1,12 +1,11 @@
 # coding=utf-8
-
 import os
 import sys
 import re
 import json
 import getopt
 import requests
-from amazonHtmlParser import *
+from amazonBeautifulParser import *
 
     # https://www.amazon.com/dp/B0716SVLXH
 commodityPrefix = "https://www.amazon.com/dp/"
@@ -19,20 +18,7 @@ def getCurrentGoodsWebContent(commodityID):
     response = requests.get(commodityPrefix + commodityID)
     if (response.status_code == 404) :
         print('No found the commodity')
-    parserResponse(response.text)
     return response.text
-
-def parserResponse(html):
-    parser = amazonHtmlParser()
-    parser.feed(html)
-    print("echo Feed end")
-    startAttrs = parser.getStartAttrs()
-    for attr in startAttrs:
-        print (type(attr))
-        if "a-expander-content a-expander-partial-collapse-content" in attr:
-            print ("find the comment")
-            import pdb; pdb.set_trace();
-
 
 if __name__ == '__main__':
     try:
@@ -52,4 +38,13 @@ if __name__ == '__main__':
                 systemExit('Please write commodity ID')
             commodityID = value
     response = getCurrentGoodsWebContent(commodityID)
+    if response:
+        amazonParser = amazonBeautifulParser()
+        soup = amazonParser.parser(response)
+        comments = soup.find_all("div",{"class":"a-section review"})
+        print(len(comments))
+
+
+
+    
 
