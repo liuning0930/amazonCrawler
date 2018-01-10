@@ -40,9 +40,7 @@ if __name__ == '__main__':
     response = getCurrentGoodsWebContent(commodityID)
     if response:
         amazonParser = amazonBeautifulParser()
-        soup = amazonParser.parser(response)
-        comments = soup.find_all("div",{"class":"a-section review"})
-        print(len(comments))
+        amazonParser.parser(response)
 
 
 
