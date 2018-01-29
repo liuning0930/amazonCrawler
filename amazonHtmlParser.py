@@ -1,6 +1,7 @@
 from html.parser import HTMLParser
 from html.entities import name2codepoint
 
+
 class amazonHtmlParser(HTMLParser):
 
     flag = False
@@ -28,8 +29,10 @@ class amazonHtmlParser(HTMLParser):
             import pdb; pdb.set_trace();
 
 
+
     def getStartAttrs(self):
         return self._startAttrs
+
 
     def getComments(self):
         return self.comments

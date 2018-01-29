@@ -7,18 +7,21 @@ import getopt
 import requests
 from amazonBeautifulParser import *
 
-    # https://www.amazon.com/dp/B0716SVLXH
+# https://www.amazon.com/dp/B0716SVLXH
 commodityPrefix = "https://www.amazon.com/dp/"
 
-def systemExit(message) :
+
+def systemExit(message):
     os.system('echo ' + message)
     sys.exit(0)
 
+
 def getCurrentGoodsWebContent(commodityID):
     response = requests.get(commodityPrefix + commodityID)
-    if (response.status_code == 404) :
+    if (response.status_code == 404):
         print('No found the commodity')
     return response.text
+
 
 if __name__ == '__main__':
     try:
@@ -26,8 +29,8 @@ if __name__ == '__main__':
     except getopt.GetoptError as err:
         print (str(err))
         systemExit('Please write commodity ID')
-    
-    if (len(opts) == 0) :
+
+    if (len(opts) == 0):
         systemExit('Please write commodity ID')
 
     commodityID = ""
@@ -40,9 +43,4 @@ if __name__ == '__main__':
     response = getCurrentGoodsWebContent(commodityID)
     if response:
         amazonParser = amazonBeautifulParser()
-        amazonParser.parser(response)
-
-
-
-    
-
+        amazonParser.amazon_parser(response)
