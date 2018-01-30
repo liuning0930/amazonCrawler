@@ -7,7 +7,7 @@ import getopt
 import requests
 from amazonBeautifulParser import *
 
-# https://www.amazon.com/dp/B0716SVLXH
+# https://www.amazon.com/dp/B072JCVHF6
 commodityPrefix = "https://www.amazon.com/dp/"
 
 
@@ -17,7 +17,8 @@ def systemExit(message):
 
 
 def getCurrentGoodsWebContent(commodityID):
-    response = requests.get(commodityPrefix + commodityID)
+    user_agent = {'User-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
+    response = requests.get(commodityPrefix + commodityID, headers=user_agent)
     if (response.status_code == 404):
         print('No found the commodity')
     return response.text
@@ -40,6 +41,7 @@ if __name__ == '__main__':
                 print('CommodityID is empty')
                 systemExit('Please write commodity ID')
             commodityID = value
+
     response = getCurrentGoodsWebContent(commodityID)
     if response:
         amazonParser = amazonBeautifulParser()

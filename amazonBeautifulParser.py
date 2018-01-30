@@ -12,8 +12,7 @@ class amazonBeautifulParser:
 
     def amazon_parser(self, html):
         self.soup = BeautifulSoup(html, "lxml")
-        review_class = "a-section review-views celwidget"
-        commentsSection = self.soup.find_all("div", {"class": review_class})
+        commentsSection = self.soup.find_all("div", {"class": "a-section review-views celwidget"})
         self.findAllComments(commentsSection)
         return
 

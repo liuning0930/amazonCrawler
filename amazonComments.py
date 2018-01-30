@@ -30,14 +30,18 @@ class amazonComments:
         self.parser_comments(comments, soup)
         self.commentObjArray = []
 
-    def contains(self, small, big):
-        for i in range(len(big)-len(small)+1):
-            for j in range(len(small)):
-                if big[i+j] != small[j]:
-                    break
-                else:
-                    return True
-            return False
+    def contains(self, item, array):
+        for temp_item in array:
+            if temp_item == item:
+                return True
+        return False
+
+    def calculateRate(self, rate_string):
+        split_rate = rate_string.split(" ")
+        if len(split_rate) > 1:
+            return split_rate[0]
+
+        return '0'
 
     def parser_comments(self, comments, soup):
         str_comments = str(comments)
@@ -46,7 +50,8 @@ class amazonComments:
         parser_comments = []
 
         if (len(soup_comments) == 0):
-            os.sys("echo comments get fialed")
+            os.system("echo comments get fialed")
+            sys.exit(0)
 
         for comment in soup_comments:
             soup = BeautifulSoup(str(comment), "lxml")
@@ -56,11 +61,26 @@ class amazonComments:
             comment_obj.comment_id = comment_id
             celwidget_div = soup.div.div
             for child in celwidget_div.children:
-                if child.name == "div" and self.contains(['a-row', 'review-data'], ['a-row', 'review-data']):
+                class_array = child["class"]
+                # 找出comment data的div
+                if child.name == "div" and self.contains('a-row', class_array) and self.contains('review-data', class_array) and len(class_array) == 2:
                     review_text_span = child.span
                     expander_collapsed_div = review_text_span.div
-                    expander_content_div = expander_collapsed_div.div
-                    comment_data = expander_content_div.content
-                    comment_obj.comment_text = str(comment_data)
+                    for expander_child in expander_collapsed_div.children:
+                        # 当满足这个条件才是评论
+                        if expander_child.name == "div" and expander_child["data-hook"] == "review-collapsed":
+                            comment_data = expander_child.string
+                            comment_obj.comment_text = comment_data
+
+                # 找到评论日期
+                if child.name == "span" and child["data-hook"] == "review-date":
+                    comment_date = child.string
+                    comment_obj.comment_date = comment_date
+
+                # 找到rate
+                if child.name == 'div' and self.contains('a-row', class_array) and len(class_array) == 1:
+                    rate_a = child.a
+                    rate_title = rate_a["title"]
+                    comment_obj.comment_rate = self.calculateRate(rate_title)
 
             parser_comments.append(comment_obj)
