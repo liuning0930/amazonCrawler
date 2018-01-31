@@ -36,6 +36,13 @@ class amazonComments:
                 return True
         return False
 
+    def containsAttrs(self, attr, attrs):
+        if isinstance(attrs, list):
+            for temp_attr in attrs:
+                attr_keys = temp_attr.keys()
+                return self.contains(attr, attr_keys)
+        return False
+
     def calculateRate(self, rate_string):
         split_rate = rate_string.split(" ")
         if len(split_rate) > 1:
@@ -68,12 +75,12 @@ class amazonComments:
                     expander_collapsed_div = review_text_span.div
                     for expander_child in expander_collapsed_div.children:
                         # 当满足这个条件才是评论
-                        if expander_child.name == "div" and expander_child["data-hook"] == "review-collapsed":
+                        if expander_child.name == "div" and self.containsAttrs("data-hook", child.attrs) and expander_child["data-hook"] == "review-collapsed":
                             comment_data = expander_child.string
                             comment_obj.comment_text = comment_data
 
                 # 找到评论日期
-                if child.name == "span" and child["data-hook"] == "review-date":
+                if child.name == "span" and self.containsAttrs("data-hook", child.attrs) and child["data-hook"] == "review-date":
                     comment_date = child.string
                     comment_obj.comment_date = comment_date
 
