@@ -9,10 +9,11 @@ class amazonBeautifulParser:
     def findAllComments(self, comments):
         print("find all comments")
         amazon_comments = amazonComments(comments, self.soup)
+        return amazon_comments.commentObjArray
 
     def amazon_parser(self, html):
         self.soup = BeautifulSoup(html, "lxml")
-        commentsSection = self.soup.find_all("div", {"class": "a-section review-views celwidget"})
+        commentsSection = self.soup.find_all("div", {"class": "a-section a-spacing-none review-views celwidget"})
         self.findAllComments(commentsSection)
         return
 

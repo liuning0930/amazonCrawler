@@ -71,23 +71,23 @@ class amazonComments:
                 class_array = child["class"]
                 # 找出comment data的div
                 if child.name == "div" and self.contains('a-row', class_array) and self.contains('review-data', class_array) and len(class_array) == 2:
-                    review_text_span = child.span
-                    expander_collapsed_div = review_text_span.div
-                    for expander_child in expander_collapsed_div.children:
-                        # 当满足这个条件才是评论
-                        if expander_child.name == "div" and self.containsAttrs("data-hook", child.attrs) and expander_child["data-hook"] == "review-collapsed":
-                            comment_data = expander_child.string
-                            comment_obj.comment_text = comment_data
+                    expander_collapsed_span = child.span
+                    comment_data = expander_collapsed_span.string
+                    comment_obj.comment_text = comment_data
 
                 # 找到评论日期
                 if child.name == "span" and self.containsAttrs("data-hook", child.attrs) and child["data-hook"] == "review-date":
                     comment_date = child.string
                     comment_obj.comment_date = comment_date
 
-                # 找到rate
                 if child.name == 'div' and self.contains('a-row', class_array) and len(class_array) == 1:
-                    rate_a = child.a
-                    rate_title = rate_a["title"]
-                    comment_obj.comment_rate = self.calculateRate(rate_title)
+                    for div_child in child.children:
+                        # 找到rate
+                        if div_child.name == 'a' and self.containsAttrs('class', div_child.attrs) and self.containsAttrs('title', div_child.attrs):
+                            rate_a = div_child
+                            rate_title = rate_a["title"]
+                            comment_obj.comment_rate = self.calculateRate(rate_title)
 
             parser_comments.append(comment_obj)
+            self.commentObjArray = parser_comments
+            return parser_comments
