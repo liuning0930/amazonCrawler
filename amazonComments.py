@@ -27,8 +27,8 @@ class amazonComments:
 
     def __init__(self, comments, soup):
         self.origin_comments = comments
-        self.parser_comments(comments, soup)
         self.commentObjArray = []
+        self.parser_comments(comments, soup)
 
     def contains(self, item, array):
         for temp_item in array:
@@ -87,7 +87,6 @@ class amazonComments:
                             rate_a = div_child
                             rate_title = rate_a["title"]
                             comment_obj.comment_rate = self.calculateRate(rate_title)
-
             parser_comments.append(comment_obj)
-            self.commentObjArray = parser_comments
-            return parser_comments
+        self.commentObjArray = parser_comments
+        return parser_comments

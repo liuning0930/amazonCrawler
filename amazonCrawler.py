@@ -5,13 +5,11 @@ import re
 import json
 import getopt
 import requests
-from amazonBeautifulParser import *
+from amazonBeautifulParser import amazonBeautifulParser
 from bs4 import BeautifulSoup
+from amazonRequest import amazonRequest
 
 # https://www.amazon.com/dp/B072JCVHF6
-commodityPrefix = "https://www.amazon.com/dp/"
-commentPrefix = "https://www.amazon.com"
-useragent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
 
 
 def systemExit(message):
@@ -20,19 +18,19 @@ def systemExit(message):
 
 
 def getCurrentGoodsWebContent(commodityID):
-    user_agent = {'User-agent': useragent}
-    response = requests.get(commodityPrefix + commodityID, headers=user_agent)
-    if (response.status_code == 404):
+    amazon_request = amazonRequest()
+    response = amazon_request.request(amazon_request.commodityPrefix + commodityID)
+    if response == "":
         print('No found the commodity')
-    return response.text
+    return response
 
 
 def getAllReviewsCommentsContent(href):
-    user_agent = {'User-agent': useragent}
-    response = requests.get(commentPrefix + href, headers=user_agent)
-    if (response.status_code == 404):
+    amazon_request = amazonRequest()
+    response = amazon_request.request(amazon_request.commentPrefix + href)
+    if response == "":
         print('No found the commodity')
-    return response.text
+    return response
 
 
 if __name__ == '__main__':
