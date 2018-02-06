@@ -49,8 +49,8 @@ class amazonBeautifulParser:
         else:
             # 大于1页的时候
             for page_num in range(len(self.pages)):
-                print("Get Page page_num comments")
-                if page_num != 0:
+                print("Get Page page_num comments: " + str(page_num))
+                if page_num > 0:
                     # 获取每一页的内容
                     page_response = self.getPageComments(self.pages[page_num])
                     if page_response == "":
@@ -61,11 +61,10 @@ class amazonBeautifulParser:
                     amazon_comments_page = amazonComments(page_response, self.soup)
                     page_parser_comments = amazon_comments_page.commentObjArray
                     if len(page_parser_comments) > 0:
-                        comments.append(page_parser_comments)
+                        comments.extend(page_parser_comments)
                         continue
                     else:
                         continue
-            import pdb; pdb.set_trace();
             return comments
 
 

@@ -4,10 +4,11 @@ import sys
 import re
 import json
 import getopt
-import requests
 from amazonBeautifulParser import amazonBeautifulParser
 from bs4 import BeautifulSoup
 from amazonRequest import amazonRequest
+sys.path.append("..")
+from excel.commentsToExcel import commentsToExcel
 
 # https://www.amazon.com/dp/B072JCVHF6
 
@@ -66,6 +67,10 @@ if __name__ == '__main__':
                     # 3. 解析comments
                     print("Get All Reviews Successfully, begin to parse")
                     amazonParser = amazonBeautifulParser()
-                    amazonParser.amazon_parser(response)
+                    comments = amazonParser.amazon_parser(response)
+                    if len(comments) > 0:
+                        excel_comments = commentsToExcel()
+                        excel_comments.createExcel(comments, commodityID)
+
                 else:
                     print("Get All Reviews failed")
