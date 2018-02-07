@@ -1,2 +1,6 @@
 ** Abstract 
    To grep Amazon Good Comments
+** Manual
+   1. Run amazon.sh script to install necessory packages
+   2. In your command line, run:
+      python3 amazonCrawler.py -l B072JCVHF6
