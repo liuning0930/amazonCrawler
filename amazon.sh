@@ -21,6 +21,7 @@ sudo pip3 install beautifulsoup4
 sudo pip3 install xlrd
 sudo pip3 install xlwt
 sudo pip3 install HTMLParser
+sudo pip3 install requests
 
 echo finsih to create crawler configtions
 
