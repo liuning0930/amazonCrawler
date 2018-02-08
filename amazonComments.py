@@ -45,32 +45,40 @@ class amazonComments:
             sys.exit(0)
 
         for comment in soup_comments:
-            soup = BeautifulSoup(str(comment), "lxml")
-            review_div = soup.div
-            comment_id = review_div["id"]
-            comment_obj = amazonCommentObj()
-            comment_obj.comment_id = comment_id
-            celwidget_div = soup.div.div
-            for child in celwidget_div.children:
-                class_array = child["class"]
-                # 找出comment data的div
-                if child.name == "div" and self.contains('a-row', class_array) and self.contains('review-data', class_array) and len(class_array) == 2:
-                    expander_collapsed_span = child.span
-                    comment_data = expander_collapsed_span.string
-                    comment_obj.comment_text = comment_data
+            try:
+                soup = BeautifulSoup(str(comment), "lxml")
+                review_div = soup.div
+                comment_id = review_div["id"]
+                comment_obj = amazonCommentObj()
+                comment_obj.comment_id = comment_id
+                celwidget_div = soup.div.div
+                for child in celwidget_div.children:
+                    if not self.containsAttrs('class', child.attrs):
+                        continue
 
-                if child.name == 'div' and self.contains('a-row', class_array) and len(class_array) == 1:
-                    for div_child in child.children:
-                        # 找到rate
-                        if div_child.name == 'a' and self.containsAttrs('class', div_child.attrs) and self.containsAttrs('title', div_child.attrs):
-                            rate_a = div_child
-                            rate_a_span = rate_a.span
-                            rate_title = rate_a_span.string
-                            comment_obj.comment_rate = self.calculateRate(rate_title)
-                        # 找到评论日期
-                        elif div_child.name == "span" and self.containsAttrs("data-hook", div_child.attrs) and div_child["data-hook"] == "review-date":
-                            comment_date = div_child.string
-                            comment_obj.comment_date = comment_date
-            parser_comments.append(comment_obj)
+                    class_array = child["class"]
+                    # 找出comment data的div
+                    if child.name == "div" and self.contains('a-row', class_array) and self.contains('review-data', class_array) and len(class_array) == 2:
+                        expander_collapsed_span = child.span
+                        comment_data = expander_collapsed_span.string
+                        comment_obj.comment_text = comment_data
+
+                    if child.name == 'div' and self.contains('a-row', class_array) and len(class_array) == 1:
+                        for div_child in child.children:
+                            # 找到rate
+                            if div_child.name == 'a' and self.containsAttrs('class', div_child.attrs) and self.containsAttrs('title', div_child.attrs):
+                                rate_a = div_child
+                                rate_a_span = rate_a.span
+                                rate_title = rate_a_span.string
+                                comment_obj.comment_rate = self.calculateRate(rate_title)
+                            # 找到评论日期
+                            elif div_child.name == "span" and self.containsAttrs("data-hook", div_child.attrs) and div_child["data-hook"] == "review-date":
+                                comment_date = div_child.string
+                                comment_obj.comment_date = comment_date
+                                parser_comments.append(comment_obj)
+            except Exception as e:
+                print(e)
+                continue
+
         self.commentObjArray = parser_comments
         return parser_comments

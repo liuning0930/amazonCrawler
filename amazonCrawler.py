@@ -11,7 +11,7 @@ sys.path.append("..")
 from excel.commentsToExcel import commentsToExcel
 
 # https://www.amazon.com/dp/B072JCVHF6
-
+# B019T8Q426 B000N3SR22
 
 def systemExit(message):
     os.system('echo ' + message)

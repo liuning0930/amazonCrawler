@@ -3,7 +3,6 @@ class amazonCommentObj:
     soup = None
 
     def __init__(self):
-        print("amazonCommentObj")
         self.comment_id = ""
         self.comment_text = ""
         self.comment_date = ""

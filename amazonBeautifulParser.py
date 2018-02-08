@@ -7,19 +7,35 @@ class amazonBeautifulParser:
     def __init__(self):
         self.soup = None
         self.pages = []
+        self.last_page_num = 0
+        self.last_page_href = ""
 
     def findAllComments(self, comments):
         print("find all comments")
         amazon_comments = amazonComments(comments, self.soup)
         return amazon_comments.commentObjArray
 
+    def replacePageRef(self, page):
+        origin_ref = "ref=cm_cr_arp_d_paging_btm_" + str(self.last_page_num)
+        replace_ref = "ref=cm_cr_arp_d_paging_btm_" + str(page)
+        copy_last_page_href = self.last_page_href
+        replace_page_href = copy_last_page_href.replace(origin_ref, replace_ref)
+        orign_page_number = "pageNumber="+str(self.last_page_num)
+        replace_page_number = "pageNumber="+str(page)
+        replace_page_href2 = replace_page_href.replace(orign_page_number, replace_page_number)
+        return replace_page_href2
+
+    # /Concussion-Blu-ray-Will-Smith/product-reviews/B019T8Q426/ref=cm_cr_arp_d_paging_btm_170?ie=UTF8&amp;pageNumber=170&amp;reviewerType=all_reviews
     def parser_pages(self):
         pages_btm = self.soup.find_all("li", {"data-reftag": "cm_cr_arp_d_paging_btm"})
         for pages_btm_li in pages_btm:
-            for child in pages_btm[0].children:
+            for child in pages_btm_li.children:
                 page_href = child["href"]
-                self.pages.append(page_href)
-        print()
+                self.last_page_href = page_href
+                self.last_page_num = child.string
+        for i in range(int(self.last_page_num)):
+            replace_href = self.replacePageRef(i+1)
+            self.pages.append(replace_href)
 
     def getPageComments(self, page):
         amazon_request = amazonRequest()
