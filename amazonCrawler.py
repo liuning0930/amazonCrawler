@@ -1,17 +1,17 @@
 # coding=utf-8
 import os
 import sys
-import re
-import json
 import getopt
 from amazonBeautifulParser import amazonBeautifulParser
 from bs4 import BeautifulSoup
 from amazonRequest import amazonRequest
 sys.path.append("..")
 from excel.commentsToExcel import commentsToExcel
+from multiprocessing import Process
 
 # https://www.amazon.com/dp/B072JCVHF6
 # B019T8Q426 B000N3SR22
+
 
 def systemExit(message):
     os.system('echo ' + message)
@@ -34,24 +34,17 @@ def getAllReviewsCommentsContent(href):
     return response
 
 
-if __name__ == '__main__':
-    try:
-        opts, argvs = getopt.getopt(sys.argv[1:], 'l:', '')
-    except getopt.GetoptError as err:
-        print (str(err))
-        systemExit('Please write commodity ID')
+def beginToParser(commodityIDs):
+    print('Parent process %s.' % os.getpid())
+    for commodityID in commodityIDs:
+        p = Process(target=childProcess, args=(commodityID,))
+        print('Child process will start.')
+        p.start()
+        # p.join()
+        print('Child process end.')
 
-    if (len(opts) == 0):
-        systemExit('Please write commodity ID')
 
-    commodityID = ""
-    for option, value in opts:
-        if option == '-l':
-            if value == "":
-                print('CommodityID is empty')
-                systemExit('Please write commodity ID')
-            commodityID = value
-
+def childProcess(commodityID):
     response = getCurrentGoodsWebContent(commodityID)
     print("Get Goods Content successfully")
     if response:
@@ -71,6 +64,27 @@ if __name__ == '__main__':
                     if len(comments) > 0:
                         excel_comments = commentsToExcel()
                         excel_comments.createExcel(comments, commodityID)
-
                 else:
                     print("Get All Reviews failed")
+
+
+if __name__ == '__main__':
+    try:
+        opts, argvs = getopt.getopt(sys.argv[1:], 'l:', '')
+    except getopt.GetoptError as err:
+        print (str(err))
+        systemExit('Please write commodity ID')
+
+    if (len(opts) == 0):
+        systemExit('Please write commodity ID')
+
+    commodityIDs = ""
+    for option, value in opts:
+        if option == '-l':
+            if value == "":
+                print('CommodityID is empty')
+                systemExit('Please write commodity ID')
+            commodityIDs = value.split(" ")
+            import pdb; pdb.set_trace();
+
+    beginToParser(commodityIDs)

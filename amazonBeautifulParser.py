@@ -32,7 +32,7 @@ class amazonBeautifulParser:
             for child in pages_btm_li.children:
                 page_href = child["href"]
                 self.last_page_href = page_href
-                self.last_page_num = child.string
+                self.last_page_num = child.string.replace(',', '')
         for i in range(int(self.last_page_num)):
             replace_href = self.replacePageRef(i+1)
             self.pages.append(replace_href)
