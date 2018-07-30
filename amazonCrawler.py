@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from amazonRequest import amazonRequest
 sys.path.append("..")
 from excel.commentsToExcel import commentsToExcel
-from multiprocessing import Process
+import multiprocessing
 
 # https://www.amazon.com/dp/B072JCVHF6
 # B019T8Q426 B000N3SR22
@@ -34,16 +34,6 @@ def getAllReviewsCommentsContent(href):
     return response
 
 
-def beginToParser(commodityIDs):
-    print('Parent process %s.' % os.getpid())
-    for commodityID in commodityIDs:
-        p = Process(target=childProcess, args=(commodityID,))
-        print('Child process will start.')
-        p.start()
-        # p.join()
-        print('Child process end.')
-
-
 def childProcess(commodityID):
     response = getCurrentGoodsWebContent(commodityID)
     print("Get Goods Content successfully")
@@ -68,11 +58,21 @@ def childProcess(commodityID):
                     print("Get All Reviews failed")
 
 
+def beginToParser(commodityIDs):
+    print('Parent process %s.' % os.getpid())
+    for commodityID in commodityIDs:
+        p = multiprocessing.Process(target=childProcess, args=(commodityID,))
+        print('Child process will start.')
+        p.start()
+        # p.join()
+        print('Child process end.')
+
+
 if __name__ == '__main__':
     try:
         opts, argvs = getopt.getopt(sys.argv[1:], 'l:', '')
     except getopt.GetoptError as err:
-        print (str(err))
+        print(str(err))
         systemExit('Please write commodity ID')
 
     if (len(opts) == 0):
