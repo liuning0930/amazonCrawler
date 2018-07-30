@@ -85,6 +85,5 @@ if __name__ == '__main__':
                 print('CommodityID is empty')
                 systemExit('Please write commodity ID')
             commodityIDs = value.split(" ")
-            import pdb; pdb.set_trace();
 
     beginToParser(commodityIDs)
