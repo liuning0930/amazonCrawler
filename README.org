@@ -3,4 +3,4 @@
 ** Manual
    1. Run amazon.sh script to install necessory packages
    2. In your command line, run:
-      python3 amazonCrawler.py -l B072JCVHF6 B000N3SR22
+   python3 amazonCrawler.py -l "B072JCVHF6 B000N3SR22"

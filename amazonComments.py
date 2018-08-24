@@ -58,10 +58,11 @@ class amazonComments:
 
                     class_array = child["class"]
                     # 找出comment data的div
-                    if child.name == "div" and self.contains('a-row', class_array) and self.contains('review-data', class_array) and len(class_array) == 2:
+                    if child.name == "div" and self.contains('a-row', class_array) and self.contains('review-data', class_array) and self.contains('a-spacing-small', class_array) and len(class_array) == 3:
                         expander_collapsed_span = child.span
-                        comment_data = expander_collapsed_span.string
-                        comment_obj.comment_text = comment_data
+                        if expander_collapsed_span["data-hook"] == "review-body":
+                            comment_data = expander_collapsed_span.string
+                            comment_obj.comment_text = comment_data
 
                     if child.name == 'div' and self.contains('a-row', class_array) and len(class_array) == 1:
                         for div_child in child.children:

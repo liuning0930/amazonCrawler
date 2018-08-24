@@ -10,7 +10,7 @@ class commentsToExcel:
     def __init__(self):
         print("Start to create Excel")
 
-    def createExcel(self, comments, commodityID):
+    def createExcel(self, comments, commodityID, excelPath):
         file = xlwt.Workbook()
         table = file.add_sheet(commodityID)
         for col in range(6):
@@ -60,6 +60,6 @@ class commentsToExcel:
             table.write(num+1, 3, comment_obj.comment_date, style)
             table.write(num+1, 4, comment_obj.comment_rate, style)
 
-        path = "./excelfiles/" + commodityID + ".xls"
+        path = excelPath + "/" + commodityID + ".xls"
         print(commodityID + "comments file save: " + path)
         file.save(path)

@@ -53,19 +53,20 @@ def childProcess(commodityID):
                     comments = amazonParser.amazon_parser(response)
                     if len(comments) > 0:
                         excel_comments = commentsToExcel()
-                        excel_comments.createExcel(comments, commodityID)
+                        excel_comments.createExcel(comments, commodityID, EXCEL_PATH)
                 else:
                     print("Get All Reviews failed")
 
 
 def beginToParser(commodityIDs):
     print('Parent process %s.' % os.getpid())
+    print(commodityIDs)
     for commodityID in commodityIDs:
         p = multiprocessing.Process(target=childProcess, args=(commodityID,))
         print('Child process will start.')
         p.start()
         # p.join()
-        print('Child process end.')
+        # print('Child process end.')
 
 
 if __name__ == '__main__':
@@ -77,6 +78,12 @@ if __name__ == '__main__':
 
     if (len(opts) == 0):
         systemExit('Please write commodity ID')
+
+    currentPath = os.path.dirname(os.path.realpath(__file__))
+    EXCEL_PATH = "%s/excelfiles" % currentPath
+
+    if not os.path.exists(EXCEL_PATH):
+        os.system("mkdir excelfiles")
 
     commodityIDs = ""
     for option, value in opts:
