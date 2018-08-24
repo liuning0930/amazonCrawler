@@ -62,10 +62,10 @@ def beginToParser(commodityIDs):
     print('Parent process %s.' % os.getpid())
     print(commodityIDs)
     for commodityID in commodityIDs:
-        # p = multiprocessing.Process(target=childProcess, args=(commodityID,))
-        childProcess(commodityID)
-        # print('Child process will start.')
-        # p.start()
+        p = multiprocessing.Process(target=childProcess, args=(commodityID,))
+        # childProcess(commodityID)
+        print('Child process will start.')
+        p.start()
         # p.join()
         # print('Child process end.')
 
