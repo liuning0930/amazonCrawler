@@ -27,7 +27,7 @@ class commentsToExcel:
                 table_col.width = 256*20
 
         # 36pt
-        tall_style = xlwt.easyxf('font:height 720;')
+        tall_style = xlwt.easyxf('font:height 1440;')
         first_row = table.row(0)
         first_row.set_style(tall_style)
         # excel style

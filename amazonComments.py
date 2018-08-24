@@ -62,7 +62,18 @@ class amazonComments:
                         expander_collapsed_span = child.span
                         if expander_collapsed_span["data-hook"] == "review-body":
                             comment_data = expander_collapsed_span.string
-                            comment_obj.comment_text = comment_data
+                            if not comment_data:
+                                mutable_comment = ""
+                                pan_children = expander_collapsed_span.children
+                                for pan_child in pan_children:
+                                    str_pan_child = str(pan_child)
+                                    if str_pan_child == "<br/>" or str_pan_child == "<br>":
+                                        continue
+                                    else:
+                                        mutable_comment = mutable_comment + str_pan_child + "\n"
+                                comment_obj.comment_text = mutable_comment
+                            else:
+                                comment_obj.comment_text = comment_data
 
                     if child.name == 'div' and self.contains('a-row', class_array) and len(class_array) == 1:
                         for div_child in child.children:

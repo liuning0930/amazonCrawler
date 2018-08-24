@@ -26,7 +26,6 @@ class amazonHtmlParser(HTMLParser):
         if tag=="div" and _attr(attrs, "a-section review"):
             print("find div a-section review attrs")
             self.flag = True
-            import pdb; pdb.set_trace();
 
 
 
