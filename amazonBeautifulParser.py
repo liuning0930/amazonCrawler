@@ -55,12 +55,12 @@ class amazonBeautifulParser:
         # 解析pages
         self.parser_pages()
         # 解析第一页的内容
-        # amazon_comments = amazonComments(html, self.soup)
-        # comments = amazon_comments
         comments = []
         print("Get Page 1 comments")
         # 只有1页的时候
         if len(self.pages) <= 1:
+            amazon_comments = amazonComments(html, self.soup)
+            comments = amazon_comments.commentObjArray
             return comments
         else:
             # 大于1页的时候
